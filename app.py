@@ -14,9 +14,57 @@ DEFUALT_SERVER = 2
 
 sim = Simulation(DEFUALT_LAMBDA, DEFUALT_MU, DEFUALT_SERVER)
 sim.run_sim()
+df = pd.DataFrame(sim.get_records())
 
 app = dash.Dash(__name__)
 server = app.server
+
+# dash
+app.layout = html.Div(
+    [
+        html.H1('Share Tea Simulation'),
+        html.Div(
+            [
+                html.Span(
+                    "Arrival Rate(λ):",
+                ),
+                dcc.Input(id="arrival_rate", type="number", value=DEFUALT_LAMBDA, debounce=True,
+                          placeholder="Arrival Rate(λ)",
+                          min=1, max=100),
+                html.Span(
+                    "Service Rate(μ): ",
+                ),
+                dcc.Input(
+                    id="service_rate", type="number", value=DEFUALT_MU, debounce=True, placeholder="Service Rate(μ)",
+                ),
+                html.Span(
+                    "Servers Numbers: ",
+                ),
+                dcc.Input(
+                    id="servers", type="number", value=DEFUALT_SERVER, debounce=True, placeholder="Servers",
+                ),
+                html.Button(id='submit', type='submit', children='confirm'),
+                html.Hr(),
+            ]
+        ),
+        html.H2('Waiting Time Line Plot'),
+        html.Div(
+            [
+                dcc.Graph(id='live-update-graph', animate=True),
+                # dcc.Interval(
+                #     id='interval-component',
+                #     interval=1 * 1000,
+                #     n_intervals=0
+                # ),
+            ]
+        ),
+        dash_table.DataTable(
+            id='table',
+            columns=[{"name": i, "id": i} for i in df.columns],
+            data=df.to_dict('records'),
+        ),
+    ]
+)
 
 # Multiple components can update everytime interval gets fired.
 @app.callback(
@@ -69,54 +117,5 @@ def update_table(ar, sr, s):
 
 
 if __name__ == '__main__':
-    # simulation
-
-    df = pd.DataFrame(sim.get_records())
-
-    # dash
-    app.layout = html.Div(
-        [
-            html.H1('Share Tea Simulation'),
-            html.Div(
-                [
-                    html.Span(
-                        "Arrival Rate(λ):",
-                    ),
-                    dcc.Input(id="arrival_rate", type="number", value=DEFUALT_LAMBDA, debounce=True, placeholder="Arrival Rate(λ)",
-                              min=1, max=100),
-                    html.Span(
-                        "Service Rate(μ): ",
-                    ),
-                    dcc.Input(
-                        id="service_rate", type="number", value=DEFUALT_MU, debounce=True, placeholder="Service Rate(μ)",
-                    ),
-                    html.Span(
-                        "Servers Numbers: ",
-                    ),
-                    dcc.Input(
-                        id="servers", type="number", value=DEFUALT_SERVER, debounce=True, placeholder="Servers",
-                    ),
-                    html.Button(id='submit', type='submit', children='confirm'),
-                    html.Hr(),
-                ]
-            ),
-            html.H2('Waiting Time Line Plot'),
-            html.Div(
-                [
-                    dcc.Graph(id='live-update-graph', animate=True),
-                    # dcc.Interval(
-                    #     id='interval-component',
-                    #     interval=1 * 1000,
-                    #     n_intervals=0
-                    # ),
-                ]
-            ),
-            dash_table.DataTable(
-                id='table',
-                columns=[{"name": i, "id": i} for i in df.columns],
-                data=df.to_dict('records'),
-            ),
-        ]
-    )
 
     app.run_server(debug=True)
