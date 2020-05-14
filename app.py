@@ -13,6 +13,7 @@ DEFUALT_LAMBDA = 50
 DEFUALT_MU = 30
 DEFUALT_SERVER = 2
 
+GITHUB_LOGO = "https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg"
 sim = Simulation(DEFUALT_LAMBDA, DEFUALT_MU, DEFUALT_SERVER)
 sim.run_sim()
 df = pd.DataFrame(sim.get_records())
@@ -29,13 +30,17 @@ NAVBAR = dbc.Navbar(
             dbc.Row(
                 [
                     dbc.Col(
-                        dbc.NavbarBrand("Group 8 Assignment3: Share Tea Simulation", className="ml-2")
+                        dbc.NavbarBrand("[Group 8] Assignment3: Share Tea Simulation", className="ml-2")
                     ),
+                    html.A(
+                        dbc.Col(html.Img(src=GITHUB_LOGO, height="30px")),
+                        href="https://github.com/yzmsp7/bpo-term-project2020"
+                    )
                 ],
                 align="center",
                 no_gutters=True,
             ),
-            href="https://github.com/yzmsp7/bpo-term-project2020",
+            href="#",
         )
     ],
     color="dark",
@@ -66,9 +71,9 @@ app.layout = html.Div(
                 dcc.Input(
                     id="servers", type="number", value=DEFUALT_SERVER, debounce=True, placeholder="Servers",
                 ),
-                html.Button(id='submit', type='submit', children='confirm'),
+                dbc.Button("Confirm", id="submit", outline=True, color="success", className="mr-1"),
                 html.Hr(),
-                html.Div(id="average-output"),
+                dbc.Alert(id="average-output", color="secondary"),
                 html.H2('Waiting Time Line Plot')
             ],
             style={"marginTop": 30}
