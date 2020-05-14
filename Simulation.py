@@ -15,10 +15,12 @@ class Simulation:
         np.random.seed(9487)
 
     def _generate_interarrival(self):
-        return -np.log(1-np.random.rand())/self.arrival_rate
+        # *60 is /hr -> /min
+        return -np.log(1-np.random.rand())/self.arrival_rate*60
 
     def _generate_service(self):
-        return -np.log(1-np.random.rand())/self.service_rate
+        # *60 is /hr -> /min
+        return -np.log(1-np.random.rand())/self.service_rate*60
 
     def _drink_run(self, env, servers):
         cid = 0

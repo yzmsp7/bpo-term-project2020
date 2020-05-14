@@ -46,19 +46,19 @@ NAVBAR = dbc.Navbar(
 app.layout = html.Div(
     [
         NAVBAR,
-        html.Div(
+        dbc.Container(
             [
                 html.Span(
-                    "Arrival Rate(λ):",
+                    "Arrival Rate(λ) /min:",
                 ),
                 dcc.Input(id="arrival_rate", type="number", value=DEFUALT_LAMBDA, debounce=True,
-                          placeholder="Arrival Rate(λ)",
-                          min=0.01, max=100),
+                          placeholder="Arrival Rate(λ)", min=0.01, max=100),
                 html.Span(
-                    "Service Rate(μ): ",
+                    "Service Rate(μ) /min: ",
                 ),
                 dcc.Input(
-                    id="service_rate", type="number", value=DEFUALT_MU, debounce=True, placeholder="Service Rate(μ)",
+                    id="service_rate", type="number", value=DEFUALT_MU, debounce=True,
+                    placeholder="Service Rate(μ)",
                 ),
                 html.Span(
                     "Servers Numbers: ",
