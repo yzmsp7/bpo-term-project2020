@@ -1,12 +1,12 @@
 from Simulation import Simulation
-
 import dash
 import dash_table
-import pandas as pd
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 from plotly.subplots import make_subplots
+import pandas as pd
+import numpy as np
 
 DEFUALT_LAMBDA = 50
 DEFUALT_MU = 30
@@ -45,6 +45,7 @@ app.layout = html.Div(
                 ),
                 html.Button(id='submit', type='submit', children='confirm'),
                 html.Hr(),
+                html.Div(id="average-output"),
             ]
         ),
         html.H2('Waiting Time Line Plot'),
@@ -66,6 +67,7 @@ app.layout = html.Div(
     ]
 )
 
+
 # Multiple components can update everytime interval gets fired.
 @app.callback(
     Output('live-update-graph', 'figure'),
@@ -78,7 +80,7 @@ def update_graph_live(ar, sr, s):
     }
     sim = Simulation(ar, sr, s)
     sim.run_sim()
-    waiting = sim.get_wating()
+    waiting = sim.get_waiting()
 
     # Collect some data
     for i in range(len(waiting)):
@@ -101,8 +103,9 @@ def update_graph_live(ar, sr, s):
 
     return fig
 
+
 @app.callback(
-    [Output("table", "data"), Output('table', 'columns')],
+    [Output("table", "data"), Output('table', 'columns'), Output("average-output", "children")],
     [Input("arrival_rate", "value"), Input("service_rate", "value"), Input("servers", "value")]
 )
 def update_table(ar, sr, s):
@@ -112,10 +115,11 @@ def update_table(ar, sr, s):
     df = df.sort_values(by='customer')
     columns = [{"name": i, "id": i} for i in df.columns]
     data = df.to_dict('records')
+    avg_wait = np.around(df.waiting_time.mean(), 4)
+    avg_sys = np.around(df.system_time.mean(), 4)
 
-    return data, columns
+    return data, columns, "average waiting time: {}; average system time: {}".format(avg_wait, avg_sys)
 
 
 if __name__ == '__main__':
-
     app.run_server(debug=True)

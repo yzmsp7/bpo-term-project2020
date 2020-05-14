@@ -3,7 +3,7 @@ import simpy
 
 class Simulation:
 
-    def __init__(self, arrival_rate=2, service_rate=3, servers=1, until=10):
+    def __init__(self, arrival_rate=2, service_rate=3, servers=1, until=100):
         self.arrival_rate = arrival_rate
         self.service_rate = service_rate
         self.servers = servers
@@ -12,17 +12,17 @@ class Simulation:
         self.records = []
         np.random.seed(9487)
 
-    def generate_interarrival(self):
-        return np.random.exponential(1. / self.arrival_rate)
+    def _generate_interarrival(self):
+        return -np.log(1-np.random.rand())/self.arrival_rate
 
-    def generate_service(self):
-        return np.random.exponential(1. / self.service_rate)
+    def _generate_service(self):
+        return -np.log(1-np.random.rand())/self.service_rate
 
     def _drink_run(self, env, servers):
         cid = 0
         while True:
             cid += 1
-            yield env.timeout(self.generate_interarrival())
+            yield env.timeout(self._generate_interarrival())
             env.process(self._customer(env, cid, servers))
 
     def _customer(self, env, customer, servers):
@@ -32,7 +32,8 @@ class Simulation:
             yield request
             t_start = env.now
             # print('%.3f customer %d is being served' % (t_start, customer))
-            t_service = self.generate_service()
+            # choice = np.random.choice(np.arange(1, 3), p=[0.4, 0.6])
+            t_service = self._generate_service()
             yield env.timeout(t_service)
             t_depart = env.now
             # print('%.3f customer %d departs' % (t_depart, customer))
@@ -46,7 +47,7 @@ class Simulation:
                 'end_time': np.around(t_end, 3),
                 'waiting_time': np.around(t_start - t_arrival, 3),
                 'system_time': np.around(t_end - t_arrival, 3),
-                'served': servers.count,
+                'served_by': servers.count,
             })
 
     def run_sim(self):
@@ -58,5 +59,5 @@ class Simulation:
     def get_records(self) -> list:
         return self.records
 
-    def get_wating(self):
+    def get_waiting(self) -> list:
         return self.waiting_list
