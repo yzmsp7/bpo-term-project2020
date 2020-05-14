@@ -1,6 +1,7 @@
 from Simulation import Simulation
 import dash
 import dash_table
+import dash_bootstrap_components as dbc
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
@@ -16,13 +17,35 @@ sim = Simulation(DEFUALT_LAMBDA, DEFUALT_MU, DEFUALT_SERVER)
 sim.run_sim()
 df = pd.DataFrame(sim.get_records())
 
-app = dash.Dash(__name__)
+app = dash.Dash(__name__, external_stylesheets=[dbc.themes.BOOTSTRAP])
 server = app.server
 
 # dash
+
+NAVBAR = dbc.Navbar(
+    children=[
+        html.A(
+            # Use row and col to control vertical alignment of logo / brand
+            dbc.Row(
+                [
+                    dbc.Col(
+                        dbc.NavbarBrand("Group 8 Assignment3: Share Tea Simulation", className="ml-2")
+                    ),
+                ],
+                align="center",
+                no_gutters=True,
+            ),
+            href="https://github.com/yzmsp7/bpo-term-project2020",
+        )
+    ],
+    color="dark",
+    dark=True,
+    sticky="top",
+)
+
 app.layout = html.Div(
     [
-        html.H1('Share Tea Simulation'),
+        NAVBAR,
         html.Div(
             [
                 html.Span(
@@ -30,7 +53,7 @@ app.layout = html.Div(
                 ),
                 dcc.Input(id="arrival_rate", type="number", value=DEFUALT_LAMBDA, debounce=True,
                           placeholder="Arrival Rate(λ)",
-                          min=1, max=100),
+                          min=0.01, max=100),
                 html.Span(
                     "Service Rate(μ): ",
                 ),
@@ -46,7 +69,8 @@ app.layout = html.Div(
                 html.Button(id='submit', type='submit', children='confirm'),
                 html.Hr(),
                 html.Div(id="average-output"),
-            ]
+            ],
+            style={"marginTop": 30}
         ),
         html.H2('Waiting Time Line Plot'),
         html.Div(

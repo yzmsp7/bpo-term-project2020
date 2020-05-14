@@ -26,3 +26,4 @@ simpy==4.0.1
 six==1.14.0
 Werkzeug==1.0.1
 gunicorn==20.0.4
+dash-bootstrap-components==0.10.0
