@@ -10,7 +10,6 @@ from dash.dependencies import Input, Output
 from plotly.subplots import make_subplots
 from random import randint
 
-
 DEFUALT_LAMBDA = 50
 DEFUALT_MU = 30
 DEFUALT_SERVER = 2
