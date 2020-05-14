@@ -17,9 +17,8 @@ DEFUALT_SERVER = 2
 sim = Simulation(DEFUALT_LAMBDA, DEFUALT_MU, DEFUALT_SERVER)
 sim.run_sim()
 
-oneline_server = flask.Flask(__name__)
-oneline_server.secret_key = os.environ.get('secret_key', str(randint(0, 1000000)))
 app = dash.Dash(__name__, server=oneline_server)
+server = app.server
 
 # Multiple components can update everytime interval gets fired.
 @app.callback(
@@ -122,4 +121,4 @@ if __name__ == '__main__':
         ]
     )
 
-    app.server.run(debug=True)
+    app.run_server(debug=True)
