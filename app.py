@@ -1,6 +1,5 @@
 from Simulation import Simulation
-import os
-import flask
+
 import dash
 import dash_table
 import pandas as pd
@@ -8,7 +7,6 @@ import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
 from plotly.subplots import make_subplots
-from random import randint
 
 DEFUALT_LAMBDA = 50
 DEFUALT_MU = 30
@@ -17,7 +15,7 @@ DEFUALT_SERVER = 2
 sim = Simulation(DEFUALT_LAMBDA, DEFUALT_MU, DEFUALT_SERVER)
 sim.run_sim()
 
-app = dash.Dash(__name__, server=oneline_server)
+app = dash.Dash(__name__)
 server = app.server
 
 # Multiple components can update everytime interval gets fired.
