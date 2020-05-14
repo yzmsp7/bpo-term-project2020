@@ -115,10 +115,10 @@ def update_table(ar, sr, s):
     df = df.sort_values(by='customer')
     columns = [{"name": i, "id": i} for i in df.columns]
     data = df.to_dict('records')
-    avg_wait = np.around(df.waiting_time.mean(), 4)
-    avg_sys = np.around(df.system_time.mean(), 4)
+    avg_wait = np.around(df.waiting_time.mean(), 3)
+    avg_sys = np.around(df.system_time.mean(), 3)
 
-    return data, columns, "average waiting time: {}; average system time: {}".format(avg_wait, avg_sys)
+    return data, columns, "average waiting time: {}(s); average system time: {}(s)".format(avg_wait, avg_sys)
 
 
 if __name__ == '__main__':

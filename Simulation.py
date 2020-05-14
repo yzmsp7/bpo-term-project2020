@@ -1,9 +1,11 @@
 import numpy as np
 import simpy
+import datetime as dt
+
 
 class Simulation:
 
-    def __init__(self, arrival_rate=2, service_rate=3, servers=1, until=100):
+    def __init__(self, arrival_rate=2, service_rate=3, servers=1, until=20):
         self.arrival_rate = arrival_rate
         self.service_rate = service_rate
         self.servers = servers
@@ -26,28 +28,33 @@ class Simulation:
             env.process(self._customer(env, cid, servers))
 
     def _customer(self, env, customer, servers):
+        t = dt.datetime(2020, 5, 14, 10, 30, 0)  # start from 10:30 a.m.
         with servers.request() as request:
-            t_arrival = env.now
+            t_arrival = np.around(env.now, 3)
+            t_arrival = t + dt.timedelta(minutes=t_arrival*60)
             # print('%.3f customer %d arrives' % (t_arrival, customer))
             yield request
-            t_start = env.now
+            t_start = np.around(env.now, 3)
+            t_start = t + dt.timedelta(minutes=t_start*60)
+
             # print('%.3f customer %d is being served' % (t_start, customer))
             # choice = np.random.choice(np.arange(1, 3), p=[0.4, 0.6])
             t_service = self._generate_service()
             yield env.timeout(t_service)
-            t_depart = env.now
+            t_end = np.around(env.now, 3)
+            t_end = t + dt.timedelta(minutes=t_end*60)
             # print('%.3f customer %d departs' % (t_depart, customer))
-            t_end = env.now
-            self.waiting_list.append(t_depart - t_arrival)
+
+            self.waiting_list.append((t_end - t_arrival).seconds)
             self.records.append({
                 'customer': customer,
-                'arrival_time': np.around(t_arrival, 3),
-                'service': np.around(t_service, 3),
-                'start_time': np.around(t_start, 3),
-                'end_time': np.around(t_end, 3),
-                'waiting_time': np.around(t_start - t_arrival, 3),
-                'system_time': np.around(t_end - t_arrival, 3),
-                'served_by': servers.count,
+                'arrival_time': t_arrival.time().replace(microsecond=0),
+                'service_minutes': np.around(t_service*60, 3),
+                'start_time': t_start.time().replace(microsecond=0),
+                'end_time': t_end.time().replace(microsecond=0),
+                'waiting_time': (t_start - t_arrival).seconds,
+                'system_time': (t_end - t_start).seconds,
+                'busy_server': servers.count,
             })
 
     def run_sim(self):
