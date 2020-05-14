@@ -49,12 +49,12 @@ app.layout = html.Div(
         dbc.Container(
             [
                 html.Span(
-                    "Arrival Rate(λ) /min:",
+                    "Arrival Rate(λ) /hr:",
                 ),
                 dcc.Input(id="arrival_rate", type="number", value=DEFUALT_LAMBDA, debounce=True,
                           placeholder="Arrival Rate(λ)", min=0.01, max=100),
                 html.Span(
-                    "Service Rate(μ) /min: ",
+                    "Service Rate(μ) /hr: ",
                 ),
                 dcc.Input(
                     id="service_rate", type="number", value=DEFUALT_MU, debounce=True,
@@ -69,11 +69,11 @@ app.layout = html.Div(
                 html.Button(id='submit', type='submit', children='confirm'),
                 html.Hr(),
                 html.Div(id="average-output"),
+                html.H2('Waiting Time Line Plot')
             ],
             style={"marginTop": 30}
         ),
-        html.H2('Waiting Time Line Plot'),
-        html.Div(
+        dbc.Container(
             [
                 dcc.Graph(id='live-update-graph', animate=True),
                 # dcc.Interval(
@@ -83,11 +83,14 @@ app.layout = html.Div(
                 # ),
             ]
         ),
-        dash_table.DataTable(
-            id='table',
-            columns=[{"name": i, "id": i} for i in df.columns],
-            data=df.to_dict('records'),
-        ),
+        dbc.Container(
+            dash_table.DataTable(
+                id='table',
+                columns=[{"name": i, "id": i} for i in df.columns],
+                data=df.to_dict('records'),
+            )
+        )
+        ,
     ]
 )
 

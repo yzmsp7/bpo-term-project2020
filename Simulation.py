@@ -5,7 +5,7 @@ import datetime as dt
 
 class Simulation:
 
-    def __init__(self, arrival_rate=2, service_rate=3, servers=1, until=20):
+    def __init__(self, arrival_rate=2, service_rate=3, servers=1, until=100):
         self.arrival_rate = arrival_rate
         self.service_rate = service_rate
         self.servers = servers
@@ -15,12 +15,12 @@ class Simulation:
         np.random.seed(9487)
 
     def _generate_interarrival(self):
-        # *60 is /hr -> /min
-        return -np.log(1-np.random.rand())/self.arrival_rate*60
+        # rate /hr
+        return -np.log(1-np.random.rand())/self.arrival_rate
 
     def _generate_service(self):
-        # *60 is /hr -> /min
-        return -np.log(1-np.random.rand())/self.service_rate*60
+        # rate /hr
+        return -np.log(1-np.random.rand())/self.service_rate
 
     def _drink_run(self, env, servers):
         cid = 0
