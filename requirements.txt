@@ -1,21 +1,22 @@
+Brotli==1.0.7
 brotlipy==0.7.0
 certifi==2020.4.5.1
 cffi==1.14.0
 click==7.1.2
-dash @ file:///home/conda/feedstock_root/build_artifacts/dash_1588897734495/work
-dash-core-components @ file:///home/conda/feedstock_root/build_artifacts/dash-core-components_1588718481532/work
+dash==1.12.0
+dash-core-components==1.10.0
 dash-html-components==1.0.3
-dash-renderer @ file:///home/conda/feedstock_root/build_artifacts/dash-renderer_1588706167484/work
-dash-table @ file:///home/conda/feedstock_root/build_artifacts/dash-table_1588867552135/work
+dash-renderer==1.4.1
+dash-table==4.7.0
 Flask==1.1.2
 Flask-Compress==1.5.0
 future==0.18.2
 itsdangerous==1.1.0
 Jinja2==2.11.2
 MarkupSafe==1.1.1
-numpy @ file:///Users/runner/miniforge3/conda-bld/numpy_1588605093274/work
+numpy==1.18.4
 pandas==1.0.3
-plotly @ file:///home/conda/feedstock_root/build_artifacts/plotly_1588944647494/work
+plotly==4.7.1
 pycparser==2.20
 python-dateutil==2.8.1
 pytz==2020.1
